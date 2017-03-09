@@ -1,15 +1,5 @@
 version: '2'
 services: 
-    mysql:
-        # 编译 mysql 5.7.13
-        build: ./webserver/mysql
-        ontainer_name: lookwi_mysql
-        ports:
-            - "3306:3306"
-        environment:
-            # mysql 数据库 密码 数据库建立
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_DATABASE=test_db
     nginx:
         build: ./webserver/nginx
         container_name: lookwi_nginx
@@ -33,3 +23,17 @@ services:
     php:
         build: ./webserver/php
         dockerfile: Dockerfile-PHP7
+        container_name: lookwi_php
+        links:
+            - redis:cache
+            - mysql:db
+    mysql:
+        # 编译 mysql 5.7.13
+        build: ./webserver/mysql
+        ontainer_name: lookwi_mysql
+        ports:
+            - "3306:3306"
+        environment:
+            # mysql 数据库 密码 数据库建立
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=test_db
