@@ -1,0 +1,12 @@
+FROM php:7-fpm
+# 安装扩展
+
+# 拷贝php配置文件
+#COPY config/php.ini /usr/local/etc/php/
+
+RUN pecl install swoole \
+    & redis 
+# 启用扩展
+RUN docker-php-ext-enable swoole \
+    & redis
+

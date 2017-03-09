@@ -1,5 +1,35 @@
 version: '2'
 services: 
     mysql:
-        image: mysql:5.6
-        
+        # 编译 mysql 5.7.13
+        build: ./webserver/mysql
+        ontainer_name: lookwi_mysql
+        ports:
+            - "3306:3306"
+        environment:
+            # mysql 数据库 密码 数据库建立
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=test_db
+    nginx:
+        build: ./webserver/nginx
+        container_name: lookwi_nginx
+        ports:
+            # 添加需要映射的端口 取决于config文件中监听了那些端口
+            - "8080:8080"
+        volumes:
+            # 挂载网站文件到容器
+            - ./www/:/var/www/
+            # 网站配置文件
+            - ./www/setup/config/:/etc/nginx/conf.d/
+        links:
+            # 链接 php 
+            # php 容器节点 : php7  映射
+            - php:php7
+    redis:
+        build: ./webserver/redis
+        container_name: lookwi_redis
+        ports: 
+            - "6379:6379"
+    php:
+        build: ./webserver/php
+        dockerfile: Dockerfile-PHP7
